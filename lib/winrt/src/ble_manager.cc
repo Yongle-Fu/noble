@@ -143,8 +143,10 @@ void BLEManager::OnRadio(Radio& radio)
 
 void BLEManager::Scan(const std::vector<winrt::guid>& serviceUUIDs, bool allowDuplicates)
 {
+    LOGV("");
     mAdvertismentMap.clear();
     mAllowDuplicates = allowDuplicates;
+
     BluetoothLEAdvertisementFilter filter = BluetoothLEAdvertisementFilter();
     BluetoothLEAdvertisement advertisment = BluetoothLEAdvertisement();
     auto services = advertisment.ServiceUuids();
@@ -160,6 +162,7 @@ void BLEManager::Scan(const std::vector<winrt::guid>& serviceUUIDs, bool allowDu
 void BLEManager::OnScanResult(BluetoothLEAdvertisementWatcher watcher,
                               const BluetoothLEAdvertisementReceivedEventArgs& args)
 {
+    // LOGV("");
     uint64_t bluetoothAddress = args.BluetoothAddress();
     std::string uuid = formatBluetoothUuid(bluetoothAddress);
     int16_t rssi = args.RawSignalStrengthInDBm();
@@ -167,15 +170,18 @@ void BLEManager::OnScanResult(BluetoothLEAdvertisementWatcher watcher,
 
     if (mDeviceMap.find(uuid) == mDeviceMap.end())
     {
-        mAdvertismentMap.insert(uuid);
         auto peripheral = PeripheralWinrt(bluetoothAddress, advertismentType, rssi, args.Advertisement());
-        mEmit.Scan(uuid, rssi, peripheral);
         mDeviceMap.emplace(std::make_pair(uuid, std::move(peripheral)));
+
+        // LOGV("OnScanResult, %lld", bluetoothAddress);
+        mAdvertismentMap.insert(uuid);
+        mEmit.Scan(uuid, rssi, peripheral);
     }
     else
     {
         PeripheralWinrt& peripheral = mDeviceMap[uuid];
         peripheral.Update(rssi, args.Advertisement(), advertismentType);
+
         if (mAllowDuplicates || mAdvertismentMap.find(uuid) == mAdvertismentMap.end())
         {
             mAdvertismentMap.insert(uuid);
@@ -186,17 +192,20 @@ void BLEManager::OnScanResult(BluetoothLEAdvertisementWatcher watcher,
 
 void BLEManager::StopScan()
 {
+    LOGV("");
     mAdvertismentWatcher.Stop();
 }
 
 void BLEManager::OnScanStopped(BluetoothLEAdvertisementWatcher watcher,
                                const BluetoothLEAdvertisementWatcherStoppedEventArgs& args)
 {
+    LOGV("");
     mEmit.ScanState(false);
 }
 
 bool BLEManager::Connect(const std::string& uuid)
 {
+    LOGV("");
     if (mDeviceMap.find(uuid) == mDeviceMap.end())
     {
         mEmit.Connected(uuid, "device not found");
@@ -241,16 +250,16 @@ void BLEManager::OnConnected(IAsyncOperation<BluetoothLEDevice> asyncOp, AsyncSt
 bool BLEManager::Disconnect(const std::string& uuid)
 {
     LOGV("");
-    CHECK_DEVICE();
-
     mNotifyMap.Remove(uuid);
 
     if (mDeviceMap.find(uuid) != mDeviceMap.end()) {
         PeripheralWinrt& peripheral = mDeviceMap[uuid];
         peripheral.Disconnect();
     }
-
+    
+    // LOGV("11");
     mEmit.Disconnected(uuid);
+    // LOGV("222");
     return true;
 }
 
@@ -268,13 +277,10 @@ void BLEManager::OnConnectionStatusChanged(BluetoothLEDevice device,
             return;
         }
 
-        mNotifyMap.Remove(uuid);
-        LOGV("uuid=%s, mNotifyMap.Removed", uuid);
-
         PeripheralWinrt& peripheral = mDeviceMap[uuid];
         device.ConnectionStatusChanged(peripheral.connectionToken);
-        peripheral.Disconnect();
 
+        mNotifyMap.Remove(uuid);
         mEmit.Disconnected(uuid);
     }
 }
@@ -324,13 +330,8 @@ void BLEManager::OnServicesDiscovered(IAsyncOperation<GattDeviceServicesResult> 
             mEmit.ServicesDiscovered(uuid, serviceUuids);
         } else {
             LOGE("GattDeviceServicesResult:: failed to discover any services.");
-
             PeripheralWinrt& peripheral = mDeviceMap[uuid];
-            device.ConnectionStatusChanged(peripheral.connectionToken);
             peripheral.Disconnect();
-
-        	mEmit.Disconnected(uuid);
-			LOGV("Disconnected");
         }
     } else {
         LOGE("AsyncStatus failed: %d", status);
