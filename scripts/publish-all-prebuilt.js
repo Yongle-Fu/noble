@@ -16,8 +16,12 @@ const os = require('os');
 const BUILD_CONFIGS = [
     {
         npm_config_runtime: 'node',
-        npm_config_target: '16.13.0',
+        npm_config_target: '18.16.0',
     },
+    // {
+    //     npm_config_runtime: 'node',
+    //     npm_config_target: '16.13.0',
+    // },
     // {
     //     npm_config_runtime: 'node',
     //     npm_config_target: '12.18.3',

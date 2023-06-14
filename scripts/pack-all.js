@@ -11,6 +11,10 @@ const BUILD_CONFIGS = [
     npm_config_runtime: 'node',
     npm_config_target: '14.16.0'
   },
+  {
+    npm_config_runtime: 'node',
+    npm_config_target: '18.16.0'
+  },
   //   {
   //     npm_config_runtime: 'electron',
   //     npm_config_target: '7.3.3',
