@@ -18,6 +18,25 @@
             'conditions': [
                 ['OS=="win"', {'defines': ['_HAS_EXCEPTIONS=1']}]
             ],
+            "actions": [
+                {
+                    "action_name": "install_cppwinrt",
+                    "inputs": [],
+                    "outputs": [],
+                    "action": [
+                        {
+                            "action_name": "install_package",
+                            "inputs": [],
+                            "outputs": [],
+                            "action": [
+                                "sh",
+                                "-c",
+                                "nuget install Microsoft.Windows.CppWinRT -Version 2.0.201102.2 -OutputDirectory <(CONFIGURATION)/packages"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
-    ]
+    ],
 }
