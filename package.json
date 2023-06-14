@@ -1,7 +1,8 @@
 {
     "author": "Sandeep Mistry",
     "maintainers": [
-        "Jacob Rosenthal", "Luis Montes"
+        "Jacob Rosenthal",
+        "Luis Montes"
     ],
     "license": "MIT",
     "name": "cmsn-noble",
@@ -30,11 +31,14 @@
     "main": "./index.js",
     "types": "./index.d.ts",
     "os": [
-        "darwin", "linux", "freebsd", "win32"
+        "darwin",
+        "linux",
+        "freebsd",
+        "win32"
     ],
     "dependencies": {
-        "bindings": "^1.6.0",
-        "debug": "^4.3.2",
+        "debug": "^4.3.4",
+        "global": "^4.4.0",
         "napi-thread-safe-callback": "0.0.6",
         "node-addon-api": "^6.1.0",
         "node-gyp-build": "^4.6.0"

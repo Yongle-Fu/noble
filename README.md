@@ -10,6 +10,10 @@ Want to implement a peripheral? Check out [bleno](https://github.com/abandonware
 
 __Note:__ macOS / Mac OS X, Linux, FreeBSD and Windows are currently the only supported OSes.
 
+```shell
+nuget install Microsoft.Windows.CppWinRT -Version 2.0.201102.2 -OutputDirectory build/lib/winrt/packages
+```
+
 ## Documentation
 
 * [Quick Start Example](#quick-start-example)
@@ -61,14 +65,14 @@ noble.on('discover', async (peripheral) => {
 
 #### OS X
 
- * Install [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12)
- * On newer versions of OSX, allow bluetooth access on the terminal app: "System Preferences" —> "Security & Privacy" —> "Bluetooth" -> Add terminal app (see [Sandboxed terminal](#sandboxed-terminal))
+* Install [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12)
+* On newer versions of OSX, allow bluetooth access on the terminal app: "System Preferences" —> "Security & Privacy" —> "Bluetooth" -> Add terminal app (see [Sandboxed terminal](#sandboxed-terminal))
 
 #### Linux
 
- * Kernel version 3.6 or above
- * `libbluetooth-dev` needs to be installed. For instructions for specific distributions, see below.
- * To set the necessary privileges to run without sudo, [see this section](#running-without-rootsudo-linux-specific). This is required for all distributions (Raspbian, Ubuntu, Fedora, etc). You will not get any errors if running without sudo, but nothing will happen.
+* Kernel version 3.6 or above
+* `libbluetooth-dev` needs to be installed. For instructions for specific distributions, see below.
+* To set the necessary privileges to run without sudo, [see this section](#running-without-rootsudo-linux-specific). This is required for all distributions (Raspbian, Ubuntu, Fedora, etc). You will not get any errors if running without sudo, but nothing will happen.
 
 ##### Ubuntu, Debian, Raspbian
 
@@ -79,8 +83,9 @@ sudo apt-get install bluetooth bluez libbluetooth-dev libudev-dev
 ```
 
 Make sure `node` is on your `PATH`. If it's not, some options:
- * Symlink `nodejs` to `node`: `sudo ln -s /usr/bin/nodejs /usr/bin/node`
- * [Install Node.js using the NodeSource package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+
+* Symlink `nodejs` to `node`: `sudo ln -s /usr/bin/nodejs /usr/bin/node`
+* [Install Node.js using the NodeSource package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
 
 ##### Fedora and other RPM-based distributions
 
@@ -125,8 +130,9 @@ npm install --global --production windows-build-tools
 ```
 
 [node-bluetooth-hci-socket prerequisites](#windows)
-   * Compatible Bluetooth 4.0 USB adapter
-   * [WinUSB](https://msdn.microsoft.com/en-ca/library/windows/hardware/ff540196(v=vs.85).aspx) driver setup for Bluetooth 4.0 USB adapter, using [Zadig tool](http://zadig.akeo.ie/)
+
+* Compatible Bluetooth 4.0 USB adapter
+* [WinUSB](https://msdn.microsoft.com/en-ca/library/windows/hardware/ff540196(v=vs.85).aspx) driver setup for Bluetooth 4.0 USB adapter, using [Zadig tool](http://zadig.akeo.ie/)
 
 See [@don](https://github.com/don)'s setup guide on [Bluetooth LE with Node.js and Noble on Windows](https://www.youtube.com/watch?v=mL9B8wuEdms&feature=youtu.be&t=1m46s)
 
@@ -153,12 +159,15 @@ Additionally, there are events corresponding to each operation (and a few global
 For example, in case of the "discover services" operation of Peripheral:
 
 * There's a `discoverServices` method expecting a callback:
+
    ```javascript
    peripheral.discoverServices((error, services) => {
      // callback - handle error and services
    });
    ```
+
 * There's a `discoverServicesAsync` method returning a Promise:
+
   ```javascript
   try {
     const services = await peripheral.discoverServicesAsync();
@@ -167,7 +176,9 @@ For example, in case of the "discover services" operation of Peripheral:
     // handle error
   }
   ```
+
 * There's a `servicesDiscover` event emitted after services are discovered:
+
   ```javascript
   peripheral.once('servicesDiscover', (services) => {
     // handle services
@@ -233,6 +244,7 @@ noble.on('stateChange', callback(state));
 ```
 
 `state` can be one of:
+
 * `unknown`
 * `resetting`
 * `unsupported`
@@ -264,6 +276,7 @@ noble.on('scanStart', callback);
 ```
 
 The event is emitted when:
+
 * Scanning is started
 * Another application enables scanning
 * Another application changes scanning settings
@@ -281,9 +294,9 @@ noble.on('scanStop', callback);
 ```
 
 The event is emitted when:
+
 * Scanning is stopped
 * Another application stops scanning
-
 
 #### _Event: Peripheral discovered_
 
@@ -292,6 +305,7 @@ noble.on('discover', callback(peripheral));
 ```
 
 * `peripheral`:
+
   ```javascript
   {
     id: '<id>',
@@ -318,7 +332,6 @@ noble.on('discover', callback(peripheral));
   ```
 
 __Note:__ On macOS, the address will be set to '' if the device has not been connected previously.
-
 
 #### _Event: Warning raised_
 
@@ -469,6 +482,7 @@ service.once('characteristicsDiscover', callback(characteristics));
 ```
 
 * `characteristics`
+
   ```javascript
   {
     uuid: '<uuid>',
@@ -493,10 +507,11 @@ characteristic.once('read', callback(data, isNotification)); // legacy
 ```
 
 Emitted when:
+
 * Characteristic read has completed, result of `characteristic.read(...)`
 * Characteristic value has been updated by peripheral via notification or indication, after having been enabled with `characteristic.notify(true[, callback(error)])`
 
-**Note:** `isNotification` event parameter value MAY be `undefined` depending on platform. The parameter is **deprecated** after version 1.8.1, and not supported on macOS High Sierra and later.
+__Note:__ `isNotification` event parameter value MAY be `undefined` depending on platform. The parameter is __deprecated__ after version 1.8.1, and not supported on macOS High Sierra and later.
 
 #### Write
 
@@ -507,7 +522,6 @@ characteristic.write(data, withoutResponse[, callback(error)]); // data is a Buf
 * `withoutResponse`:
   * `false`: send a write request, used with "write" characteristic property
   * `true`: send a write command, used with "write without response" characteristic property
-
 
 #### _Event: Data written_
 
@@ -570,7 +584,9 @@ characteristic.discoverDescriptors([callback(error, descriptors)]);
 ```javascript
 characteristic.once('descriptorsDiscover', callback(descriptors));
 ```
+
 * `descriptors`:
+
   ```javascript
   [
     {
@@ -629,8 +645,8 @@ This grants the `node` binary `cap_net_raw` privileges, so it can start/stop BLE
 __Note:__ The above command requires `setcap` to be installed.
 It can be installed the following way:
 
- * apt: `sudo apt-get install libcap2-bin`
- * yum: `su -c \'yum install libcap2-bin\'`
+* apt: `sudo apt-get install libcap2-bin`
+* yum: `su -c \'yum install libcap2-bin\'`
 
 ### Multiple Adapters (Linux-specific)
 
@@ -775,9 +791,9 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 ## Useful links
 
- * [Bluetooth Development Portal](http://developer.bluetooth.org)
-   * [GATT Specifications](https://www.bluetooth.com/specifications/gatt/)
- * [Bluetooth: ATT and GATT](http://epx.com.br/artigos/bluetooth_gatt.php)
+* [Bluetooth Development Portal](http://developer.bluetooth.org)
+  * [GATT Specifications](https://www.bluetooth.com/specifications/gatt/)
+* [Bluetooth: ATT and GATT](http://epx.com.br/artigos/bluetooth_gatt.php)
 
 ## License
 
