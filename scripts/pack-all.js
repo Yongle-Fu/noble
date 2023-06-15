@@ -13,7 +13,15 @@ const BUILD_CONFIGS = [
   },
   {
     npm_config_runtime: 'node',
+    npm_config_target: '16.20.0'
+  },
+  {
+    npm_config_runtime: 'node',
     npm_config_target: '18.16.0'
+  },
+  {
+    npm_config_runtime: 'node',
+    npm_config_target: '20.3.0'
   },
   //   {
   //     npm_config_runtime: 'electron',
