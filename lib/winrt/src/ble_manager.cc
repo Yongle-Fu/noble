@@ -170,6 +170,7 @@ void BLEManager::OnScanResult(BluetoothLEAdvertisementWatcher watcher,
 
     if (mDeviceMap.find(uuid) == mDeviceMap.end())
     {
+        if (advertismentType == BluetoothLEAdvertisementType::ScanResponse) return;
         auto peripheral = PeripheralWinrt(bluetoothAddress, advertismentType, rssi, args.Advertisement());
         mDeviceMap.emplace(std::make_pair(uuid, std::move(peripheral)));
 
@@ -180,8 +181,14 @@ void BLEManager::OnScanResult(BluetoothLEAdvertisementWatcher watcher,
     else
     {
         PeripheralWinrt& peripheral = mDeviceMap[uuid];
-        peripheral.Update(rssi, args.Advertisement(), advertismentType);
-
+        // regular advertisement + scan response
+        if (advertismentType == BluetoothLEAdvertisementType::ScanResponse) {
+            args.Advertisement().LocalName(peripheral.localName);
+            peripheral.Update(rssi, args.Advertisement(), peripheral.advertismentType);
+        } else {
+            peripheral.Update(rssi, args.Advertisement(), advertismentType);
+        }
+        
         if (mAllowDuplicates || mAdvertismentMap.find(uuid) == mAdvertismentMap.end())
         {
             mAdvertismentMap.insert(uuid);
