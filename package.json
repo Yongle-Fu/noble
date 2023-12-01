@@ -73,7 +73,6 @@
   },
   "scripts": {
     "build": "node-gyp configure && node-gyp build",
-    "build-win": "node-gyp build",
     "clean-prebuilt": "node-pre-gyp clean",
     "package-prebuilt": "node-pre-gyp package",
     "pack-all": "node scripts/pack-all.js",

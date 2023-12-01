@@ -68,12 +68,12 @@ private:
     Emit mEmit;
     RadioWatcher mWatcher;
     AdapterState mRadioState;
-    BluetoothLEAdvertisementWatcher mAdvertismentWatcher;
+    BluetoothLEAdvertisementWatcher mAdvertisementWatcher;
     winrt::event_revoker<IBluetoothLEAdvertisementWatcher> mReceivedRevoker;
     winrt::event_revoker<IBluetoothLEAdvertisementWatcher> mStoppedRevoker;
     bool mAllowDuplicates;
 
     std::unordered_map<std::string, PeripheralWinrt> mDeviceMap;
-    std::set<std::string> mAdvertismentMap;
+    std::set<std::string> mAdvertisementMap;
     NotifyMap mNotifyMap;
 };
