@@ -5,12 +5,12 @@
       'conditions': [
         ['OS=="mac"', {
           'dependencies': [
-              'lib/mac/binding.gyp:noble_mac',
+            'lib/mac/binding.gyp:binding',
           ],
         }],
         ['OS=="win"', {
           'dependencies': [
-            'lib/winrt/binding.gyp:noble_winrt',
+            'lib/win/binding.gyp:binding',
           ],
         }],
       ],

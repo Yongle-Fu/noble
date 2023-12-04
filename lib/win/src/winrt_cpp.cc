@@ -4,6 +4,7 @@
 #include <iomanip>
 
 #include <winrt\Windows.Devices.Bluetooth.h>
+#include <winrt/Windows.Foundation.Collections.h>
 
 std::string ws2s(const wchar_t* wstr)
 {
@@ -51,11 +52,12 @@ std::string toStr(winrt::guid uuid)
     {
     }
 
+    // taken from winrt/base.h
     char buffer[38];
     // 00000000-0000-0000-0000-000000000000
     sprintf_s(buffer, "%08x-%04hx-%04hx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
-      uuid.Data1, uuid.Data2, uuid.Data3, uuid.Data4[0], uuid.Data4[1],
-      uuid.Data4[2], uuid.Data4[3], uuid.Data4[4], uuid.Data4[5], uuid.Data4[6], uuid.Data4[7]);
+              uuid.Data1, uuid.Data2, uuid.Data3, uuid.Data4[0], uuid.Data4[1], uuid.Data4[2],
+              uuid.Data4[3], uuid.Data4[4], uuid.Data4[5], uuid.Data4[6], uuid.Data4[7]);
     return std::string(buffer);
 }
 
