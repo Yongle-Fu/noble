@@ -9,7 +9,7 @@
 
 #include "radio_watcher.h"
 #include "winrt_cpp.h"
-#include<functional> //bind
+#include <winrt/Windows.Foundation.Collections.h>
 
 using winrt::Windows::Devices::Radios::RadioKind;
 using winrt::Windows::Foundation::AsyncStatus;
@@ -55,7 +55,7 @@ IAsyncOperation<Radio> RadioWatcher::GetRadios(std::set<winrt::hstring> ids)
                 // we only get state changes for turned on/off adapter but not for disabled adapter
                 if (state == RadioState::On || state == RadioState::Off)
                 {
-                  bluetooth = radio;
+                    bluetooth = radio;
                 }
             }
         }
@@ -64,7 +64,7 @@ IAsyncOperation<Radio> RadioWatcher::GetRadios(std::set<winrt::hstring> ids)
             // Radio::RadioFromAsync throws if the device is not available (unplugged)
         }
     }
-    return bluetooth;
+    co_return bluetooth;
 }
 
 void RadioWatcher::OnRadioChanged()
@@ -79,7 +79,8 @@ void RadioWatcher::OnRadioChanged()
                 if (radio)
                 {
                     mRadioStateChangedRevoker.revoke();
-                    mRadioStateChangedRevoker = radio.StateChanged(winrt::auto_revoke, [=](Radio radio, auto&&) { radioStateChanged(radio); });
+                    mRadioStateChangedRevoker = radio.StateChanged(
+                        winrt::auto_revoke, [=](Radio radio, auto&&) { radioStateChanged(radio); });
                 }
                 else
                 {
@@ -89,10 +90,11 @@ void RadioWatcher::OnRadioChanged()
                 mRadio = radio;
             }
         }
-        else {
-          mRadio = nullptr;
-          mRadioStateChangedRevoker.revoke();
-          radioStateChanged(mRadio);
+        else
+        {
+            mRadio = nullptr;
+            mRadioStateChangedRevoker.revoke();
+            radioStateChanged(mRadio);
         }
     });
 }

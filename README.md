@@ -1,5 +1,7 @@
 # ![noble](assets/noble-logo.png)
 
+[![npm version](https://badgen.net/npm/v/@abandonware/noble)](https://www.npmjs.com/package/@abandonware/noble)
+[![npm downloads](https://badgen.net/npm/dt/@abandonware/noble)](https://www.npmjs.com/package/@abandonware/noble)
 [![Build Status](https://travis-ci.org/abandonware/noble.svg?branch=master)](https://travis-ci.org/abandonware/noble)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/abandonware/noble?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![OpenCollective](https://opencollective.com/noble/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/noble/sponsors/badge.svg)](#sponsors)
@@ -43,6 +45,12 @@ noble.on('discover', async (peripheral) => {
   process.exit(0);
 });
 ```
+## Use Noble With BLE5 Extended Features With HCI 
+
+```javascript
+const noble = require('@abandonware/noble/with-custom-binding')({extended: true});
+
+```
 
 ## Installation
 
@@ -81,6 +89,16 @@ sudo apt-get install bluetooth bluez libbluetooth-dev libudev-dev
 Make sure `node` is on your `PATH`. If it's not, some options:
  * Symlink `nodejs` to `node`: `sudo ln -s /usr/bin/nodejs /usr/bin/node`
  * [Install Node.js using the NodeSource package](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+
+If you are having trouble connecting to BLE devices on a Raspberry Pi, you should disable the `pnat` plugin. Add the following line at the bottom of `/etc/bluetooth/main.conf`:
+
+```
+DisablePlugins=pnat
+```
+
+Then restart the system.
+
+See [Issue #425 · OpenWonderLabs/homebridge-switchbot](https://github.com/OpenWonderLabs/homebridge-switchbot/issues/425#issuecomment-1190864279).
 
 ##### Fedora and other RPM-based distributions
 
@@ -125,6 +143,7 @@ npm install --global --production windows-build-tools
 ```
 
 [node-bluetooth-hci-socket prerequisites](#windows)
+   * Compatible Bluetooth 5.0 Zephyr HCI-USB adapter (you need to add BLUETOOTH_HCI_SOCKET_USB_VID and BLUETOOTH_HCI_SOCKET_USB_PID to the process env)
    * Compatible Bluetooth 4.0 USB adapter
    * [WinUSB](https://msdn.microsoft.com/en-ca/library/windows/hardware/ff540196(v=vs.85).aspx) driver setup for Bluetooth 4.0 USB adapter, using [Zadig tool](http://zadig.akeo.ie/)
 
@@ -132,12 +151,18 @@ See [@don](https://github.com/don)'s setup guide on [Bluetooth LE with Node.js a
 
 #### Docker
 
-Make sur your container runs with `--network=host` options and all specific environment preriquisites are verified.
+Make sure your container runs with `--network=host` options and all specific environment preriquisites are verified.
 
 ### Installing and using the package
 
 ```sh
 npm install @abandonware/noble
+```
+
+In Windows OS add your custom hci-usb dongle to the process env
+```sh
+set BLUETOOTH_HCI_SOCKET_USB_VID=xxx
+set BLUETOOTH_HCI_SOCKET_USB_PID=xxx
 ```
 
 ```javascript
@@ -652,7 +677,8 @@ const Noble = require('@abandonware/noble/lib/noble');
 
 const params = {
   deviceId: 0,
-  userChannel: true
+  userChannel: true,
+  extended: false //ble5 extended features
 };
 
 const noble = new Noble(new HCIBindings(params));

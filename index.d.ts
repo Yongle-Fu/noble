@@ -65,6 +65,7 @@ export declare class Peripheral extends events.EventEmitter {
     connectable: boolean;
     advertisement: Advertisement;
     rssi: number;
+    mtu: number | null;
     services: Service[];
     state: 'error' | 'connecting' | 'connected' | 'disconnecting' | 'disconnected';
 
@@ -84,10 +85,10 @@ export declare class Peripheral extends events.EventEmitter {
     discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs: string[], characteristicUUIDs: string[]): Promise<ServicesAndCharacteristics>;
     cancelConnect(options?: object): void;
 
-    readHandle(handle: Buffer, callback: (error: string, data: Buffer) => void): void;
-    readHandleAsync(handle: Buffer): Promise<Buffer>;
-    writeHandle(handle: Buffer, data: Buffer, withoutResponse: boolean, callback: (error: string) => void): void;
-    writeHandleAsync(handle: Buffer, data: Buffer, withoutResponse: boolean): Promise<void>;
+    readHandle(handle: number, callback: (error: string, data: Buffer) => void): void;
+    readHandleAsync(handle: number): Promise<Buffer>;
+    writeHandle(handle: number, data: Buffer, withoutResponse: boolean, callback: (error: string) => void): void;
+    writeHandleAsync(handle: number, data: Buffer, withoutResponse: boolean): Promise<void>;
     toString(): string;
 
     on(event: "connect", listener: (error: string) => void): this;
@@ -167,6 +168,7 @@ export declare class Characteristic extends events.EventEmitter {
     on(event: "write", withoutResponse: boolean, listener: (error: string) => void): this;
     on(event: "broadcast", listener: (state: string) => void): this;
     on(event: "notify", listener: (state: string) => void): this;
+    on(event: "data", listener: (data: Buffer, isNotification: boolean) => void): this;
     on(event: "descriptorsDiscover", listener: (descriptors: Descriptor[]) => void): this;
     on(event: string, listener: Function): this;
     on(event: string, option: boolean, listener: Function): this;
@@ -175,6 +177,7 @@ export declare class Characteristic extends events.EventEmitter {
     once(event: "write", withoutResponse: boolean, listener: (error: string) => void): this;
     once(event: "broadcast", listener: (state: string) => void): this;
     once(event: "notify", listener: (state: string) => void): this;
+    once(event: "data", listener: (data: Buffer, isNotification: boolean) => void): this;
     once(event: "descriptorsDiscover", listener: (descriptors: Descriptor[]) => void): this;
     once(event: string, listener: Function): this;
     once(event: string, option: boolean, listener: Function): this;
