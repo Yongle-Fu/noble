@@ -685,7 +685,7 @@ void BLEManager::OnNotify(IAsyncOperation<GattWriteResult> asyncOp, AsyncStatus 
 }
 
 void BLEManager::OnValueChanged(GattCharacteristic characteristic,
-                                GattValueChangedEventArgs args, std::string deviceUuid)
+                                const GattValueChangedEventArgs args, std::string deviceUuid)
 {
     // LOGV("");
     const auto& reader = DataReader::FromBuffer(args.CharacteristicValue());

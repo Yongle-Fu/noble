@@ -54,7 +54,7 @@ private:
     void OnCharacteristicsDiscovered(IAsyncOperation<GattCharacteristicsResult> asyncOp, AsyncStatus status, std::string uuid, std::string serviceId, std::vector<winrt::guid> characteristicUUIDs);
     void OnRead(IAsyncOperation<GattReadResult> asyncOp, AsyncStatus status, std::string uuid, std::string serviceId, std::string characteristicId);
     void OnWrite(IAsyncOperation<GattWriteResult> asyncOp, AsyncStatus status, std::string uuid, std::string serviceId, std::string characteristicId);
-    void OnNotify(IAsyncOperation<GattWriteResult> asyncOp, AsyncStatus status,  GattCharacteristic characteristic, std::string uuid, std::string serviceId, std::string characteristicId, bool state);
+    void OnNotify(IAsyncOperation<GattWriteResult> asyncOp, AsyncStatus status, GattCharacteristic characteristic, std::string uuid, std::string serviceId, std::string characteristicId, bool state);
     void OnValueChanged(GattCharacteristic chracteristic, const GattValueChangedEventArgs& args, std::string uuid);
     void OnDescriptorsDiscovered(IAsyncOperation<GattDescriptorsResult> asyncOp, AsyncStatus status, std::string uuid, std::string serviceId, std::string characteristicId);
     void OnReadValue(IAsyncOperation<GattReadResult> asyncOp, AsyncStatus status, std::string uuid, std::string serviceId, std::string characteristicId, std::string descriptorId);
