@@ -7,7 +7,7 @@
   "license": "MIT",
   "name": "cmsn-noble",
   "description": "A Node.js BLE (Bluetooth Low Energy) central library.",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Yongle-Fu/noble.git"
@@ -16,7 +16,10 @@
     "module_name": "noble",
     "module_path": "./build/Release",
     "host": "https://app.brainco.cn/universal/node-prebuild/{module_name}/",
-    "remote_path": "v{version}"
+    "remote_path": "v{version}",
+    "napi_versions": [
+      4
+    ]
   },
   "keywords": [
     "bluetooth",
@@ -45,14 +48,13 @@
     "debug": "^4.3.4",
     "napi-thread-safe-callback": "^0.0.6",
     "node-addon-api": "^4.3.0",
-    "node-gyp-build": "^4.5.0"
+    "node-gyp-build": "^4.8.1",
+    "node-gyp": "^10.2.0"
   },
   "optionalDependencies": {
     "cmsn-bluetooth-hci-socket": "0.6.2"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.5",
-    "@mathquis/node-pre-gyp-github": "^1.0.1",
     "async": "^3.2.4",
     "cross-env": "^7.0.3",
     "eslint": "^8.31.0",
@@ -62,7 +64,6 @@
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0",
-    "node-gyp": "^9.3.1",
     "nyc": "^15.1.0",
     "prebuildify": "^5.0.1",
     "prebuildify-ci": "^1.0.5",
@@ -83,17 +84,12 @@
     "prebuild-win32": "prebuildify --napi --strip",
     "prebuild-linux": "prebuildify --napi --strip",
     "prebuild-download": "prebuildify-ci download",
-    "pretest": "npm run rebuild",
+    "pretest": "yarn rebuild",
     "rebuild": "node-gyp rebuild",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov > .nyc_output/lcov.info",
     "test": "cross-env NODE_ENV=test mocha --recursive \"test/*.test.js\" \"test/**/*.test.js\" --exit"
   },
   "browser": {
     "./lib/resolve-bindings.js": "./lib/resolve-bindings-web.js"
-  },
-  "binary": {
-    "napi_versions": [
-      4
-    ]
   }
 }
